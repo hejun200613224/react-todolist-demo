@@ -18,7 +18,10 @@
     "test": "react-app-rewired test"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-extend-native": "off"
+    }
   },
   "browserslist": [
     ">0.2%",

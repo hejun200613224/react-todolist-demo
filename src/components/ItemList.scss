@@ -1,0 +1,19 @@
+.ItemList {
+  .Item {
+    display: flex;
+
+    .text {
+      margin-right: auto;
+    }
+
+    .status {
+      .success {
+        color: greenyellow;
+      }
+
+      .todo {
+        color: #aaa;
+      }
+    }
+  }
+}
