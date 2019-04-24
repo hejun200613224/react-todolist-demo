@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import {Button, Typography} from 'antd'
+import {Input, Typography, Empty, LocaleProvider} from 'antd'
+import zhCN from 'antd/lib/locale-provider/zh_CN'
 import ItemList from './components/ItemList'
 import './App.scss'
 
@@ -9,12 +10,23 @@ class App extends Component {
   constructor () {
     super()
     this.state = {
-      data: [{
-        text: 'asdasdasd',
-        time: '2018-1-1',
+      inputValue: '',
+      keyLevel: 0,
+      data: []
+    }
+  }
+
+  addItem (v) {
+    if (v) {
+      let {keyLevel, data} = this.state
+      const item = {
+        text: v,
+        time: new Date().getTime(),
         status: 0,
-        id: 0
-      }]
+        id: keyLevel++
+      }
+      data.unshift(item)
+      this.setState({keyLevel, data, inputValue: ''})
     }
   }
 
@@ -28,13 +40,29 @@ class App extends Component {
 
   render () {
     return (
-      <div className="App">
-        <Title className="title" level={2}>待办事项列表</Title>
-        <div>
-          <ItemList data={this.state.data} emit_delete={this.deleteItem.bind(this)}/>
-          <Button>你好</Button>
+      <LocaleProvider locale={zhCN}>
+        <div className="App">
+          <Title className="title" level={2}>待办事项列表</Title>
+          <div className="inputSearchContent">
+            <Input.Search placeholder="请输入待办事项"
+                          enterButton="添加"
+                          type="text" size="large"
+                          allowClear
+                          value={this.state.inputValue}
+                          onChange={(e) => this.setState({inputValue: e.target.value})}
+                          onSearch={this.addItem.bind(this)}/>
+          </div>
+          <div className="itemListContent">{
+            (() => {
+              if (this.state.data.length) {
+                return <ItemList data={this.state.data} emit_delete={this.deleteItem.bind(this)}/>
+              } else {
+                return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+              }
+            })()
+          }</div>
         </div>
-      </div>
+      </LocaleProvider>
     )
   }
 }
